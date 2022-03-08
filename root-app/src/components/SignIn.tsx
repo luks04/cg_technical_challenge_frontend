@@ -1,72 +1,103 @@
-import * as React from 'react';
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import SignInConst from '../constants/SignInConst';
-
-function Copyright(props: any) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="#">
-        {SignInConst.AppName}
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
+import { useState } from "react";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import Link from "@mui/material/Link";
+import Grid from "@mui/material/Grid";
+import Box from "@mui/material/Box";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import Container from "@mui/material/Container";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
+import SignInConst from "../shared/constants/SignInConst";
+import Copyright from "../shared/components/Copyright";
+import { Redirect } from "react-router-dom";
 
 const theme = createTheme();
 
 export default function SignIn() {
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     // eslint-disable-next-line no-console
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
+    const authData = {
+      username: data.get("username"),
+      password: data.get("password"),
+    };
+    signIn(authData);
   };
 
-  return (
+  const signIn = (authData: any) => {
+    fetch("http://localhost:8080/api/app/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(authData),
+    })
+      .then((response) => {
+        if (response.status !== 200) {
+          throw Error("There was a problem in the login request");
+        } else {
+          return response.json();
+        }
+      })
+      //Then with the data from the response in JSON...
+      .then((data) => {
+        console.log("Success:", data);
+        sessionStorage.setItem("token", data.token);
+        setLoggedIn(true);
+      })
+      //Then with the error genereted...
+      .catch((error) => {
+        console.error("Error:", error);
+        sessionStorage.removeItem("token");
+        setLoggedIn(false);
+      });
+  };
+
+  return loggedIn ? (
+    <Redirect
+      to={{
+        pathname: "/home",
+      }}
+    />
+  ) : (
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
           sx={{
             marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
             {SignInConst.SignInTitle}
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <Box
+            component="form"
+            onSubmit={handleSubmit}
+            noValidate
+            sx={{ mt: 1 }}
+          >
             <TextField
               margin="normal"
               required
               fullWidth
-              id="email"
-              label={SignInConst.EmailLabel}
-              name="email"
-              autoComplete="email"
+              id="username"
+              label={SignInConst.UsernameLabel}
+              name="username"
+              autoComplete="username"
               autoFocus
             />
             <TextField
@@ -94,18 +125,18 @@ export default function SignIn() {
             <Grid container>
               <Grid item xs>
                 <Link href="#" variant="body2">
-                {SignInConst.ForgotPasswordTitle}
+                  {SignInConst.ForgotPasswordTitle}
                 </Link>
               </Grid>
               <Grid item>
                 <Link href="#" variant="body2">
-                {SignInConst.SignUpTitle}
+                  {SignInConst.SignUpTitle}
                 </Link>
               </Grid>
             </Grid>
           </Box>
         </Box>
-        <Copyright sx={{ mt: 8, mb: 4 }} />
+        <Copyright sx={{ mt: 8, mb: 4 }} title={SignInConst.AppName} />
       </Container>
     </ThemeProvider>
   );
