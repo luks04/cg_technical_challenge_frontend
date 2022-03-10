@@ -15,7 +15,8 @@ import JSONPretty from "react-json-pretty";
 import Copyright from "../shared/components/Copyright";
 import HomeConst from "../shared/constants/HomeConst";
 import TextField from "@mui/material/TextField";
-var JSONPrettyMon = require("react-json-pretty/dist/monikai");
+const core = require("../shared/core.json");
+const JSONPrettyMon = require("react-json-pretty/dist/monikai");
 
 const cards = [1, 2];
 
@@ -35,20 +36,17 @@ export default function Home() {
   const getExchangeRateData = () => {
     const token = sessionStorage.getItem("token");
     console.log(fixerAccessKey, bmxToken);
-    fetch(
-      `${process.env.BACKEND_HOST}/api/currency/get_current_exchange_rate`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + token,
-        },
-        body: JSON.stringify({
-          fixer_access_key: fixerAccessKey,
-          bmx_token: bmxToken,
-        }),
-      }
-    )
+    fetch(`${core["BACKEND_HOST"]}/api/currency/get_current_exchange_rate`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({
+        fixer_access_key: fixerAccessKey,
+        bmx_token: bmxToken,
+      }),
+    })
       .then((response) => {
         if (response.status !== 200) {
           if (response.status === 401) {
