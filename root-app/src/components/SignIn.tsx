@@ -32,7 +32,7 @@ export default function SignIn() {
   };
 
   const signIn = (authData: any) => {
-    fetch("http://localhost:8080/api/app/login", {
+    fetch(`${process.env.BACKEND_HOST}/api/app/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

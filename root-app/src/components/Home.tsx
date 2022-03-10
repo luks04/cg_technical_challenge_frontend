@@ -35,17 +35,20 @@ export default function Home() {
   const getExchangeRateData = () => {
     const token = sessionStorage.getItem("token");
     console.log(fixerAccessKey, bmxToken);
-    fetch("http://localhost:8080/api/currency/get_current_exchange_rate", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + token,
-      },
-      body: JSON.stringify({
-        fixer_access_key: fixerAccessKey,
-        bmx_token: bmxToken,
-      }),
-    })
+    fetch(
+      `${process.env.BACKEND_HOST}/api/currency/get_current_exchange_rate`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
+        body: JSON.stringify({
+          fixer_access_key: fixerAccessKey,
+          bmx_token: bmxToken,
+        }),
+      }
+    )
       .then((response) => {
         if (response.status !== 200) {
           if (response.status === 401) {
