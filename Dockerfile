@@ -9,8 +9,6 @@ FROM nginx
 
 # COPY --from=build /home/root-app/build /usr/share/nginx/html/
 
-FROM nginx:1.21.6
-
 COPY default.conf.template /etc/nginx/conf.d/default.conf.template
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY /home/root-app/build /usr/share/nginx/html
