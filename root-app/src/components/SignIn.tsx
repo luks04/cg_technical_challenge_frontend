@@ -13,6 +13,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import SignInConst from "../shared/constants/SignInConst";
+import CoreConstants from "../shared/constants/CoreConstants";
 import Copyright from "../shared/components/Copyright";
 import { Redirect } from "react-router-dom";
 
@@ -32,7 +33,7 @@ export default function SignIn() {
   };
 
   const signIn = (authData: any) => {
-    fetch(`${process.env.BACKEND_HOST}/api/app/login`, {
+    fetch(`${CoreConstants.BACKEND_HOST}/api/app/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
