@@ -5,9 +5,7 @@ WORKDIR /home
 
 RUN cd root-app && npm install && npm run build
 
-FROM nginx
-
-CMD ["cd", "root-app", "&&", "npm", "start"]
+# FROM nginx
 
 # COPY --from=build /home/root-app/build /usr/share/nginx/html/
 
