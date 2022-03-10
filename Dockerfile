@@ -3,12 +3,11 @@ FROM node:16.13.1-alpine as build
 ADD . /home
 WORKDIR /home
 
-RUN npm install -g npm@8.5.3
 RUN cd root-app && npm install && npm run build
 
 FROM nginx
 
-CMD [ "npm", "start"]
+CMD ["cd", "root-app", "&&", "npm", "start"]
 
 # COPY --from=build /home/root-app/build /usr/share/nginx/html/
 
