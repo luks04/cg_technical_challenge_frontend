@@ -34,6 +34,29 @@ It contains a React app which resolve the following objective:
 > - API should be accessed with an Application Token.
 > - API should have a rate limit per user.
 
+## Local Deployment
+
+1. Clone the repo and checkout to the desired branch:
+
+```sh
+git clone https://github.com/luks04/cg_technical_challenge_frontend
+cd cg_technical_challenge_frontend
+git checkout <branch_name>
+```
+
+2. Change directory to React app folder and install node_modules:
+
+```sh
+cd root-app
+npm install
+```
+
+3. Run at localhost:3000:
+
+```sh
+npm start
+```
+
 ## Docker Deployment in Heroku
 
 Heroku CLI needed.
